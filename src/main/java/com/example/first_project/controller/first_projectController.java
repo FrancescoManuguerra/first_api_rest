@@ -5,6 +5,7 @@ import com.example.first_project.model.Product;
 import com.example.first_project.services.ProductServices;
 import com.example.first_project.services.ProductServicesImpl;
 import com.sun.scenario.effect.impl.prism.PrDrawable;
+import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 public class first_projectController {
 
     @Autowired
@@ -49,7 +50,13 @@ public class first_projectController {
     @GetMapping(value = "/products/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable String id ){
 
-            return productServices.getProduct(id);
+        try {
+            return new ResponseEntity<Product>(productServices.getProduct(id),HttpStatus.OK);
+        }catch(BadHttpRequest badHttpRequest){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //POST
@@ -62,7 +69,16 @@ public class first_projectController {
     @PutMapping(value="/products/",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Product>> updateProduct( @RequestBody List<Product> products){
 
-        return productServices.updateProduct(products);
+        try {
+            return new ResponseEntity<List<Product>>(productServices.updateProduct(products),HttpStatus.OK);
+
+        }catch(BadHttpRequest badHttpRequest){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return  new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //DELETE

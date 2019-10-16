@@ -12,9 +12,9 @@ import java.util.List;
 public interface ProductServices {
 
     public ResponseEntity<List<Product>> getAllProducts() ;
-    public ResponseEntity<Product> getProduct(String id ) ;
+    public Product getProduct(String id )throws Exception ;
     public ResponseEntity createProducts(List<Product> products);
-    public ResponseEntity<List<Product>> updateProduct(List<Product> products);
+    public List<Product> updateProduct(List<Product> products) throws Exception;
     public ResponseEntity deleteProduct(String id);
 
 }

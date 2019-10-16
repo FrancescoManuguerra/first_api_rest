@@ -28,12 +28,13 @@ public class ProductServicesImpl implements ProductServices {
     }
 
     @Override
-    public ResponseEntity<Product> getProduct(String id)  {
+    public Product getProduct(String id) throws Exception {
         try{
-            return new ResponseEntity<Product>(productsRepository.getProduct(id),HttpStatus.OK);
+            return productsRepository.getProduct(id);
+        }catch(BadHttpRequest badHttpRequest){
+         throw new BadHttpRequest();
         }catch (Exception e ){
-            if(BadHttpRequest.class==e.getClass())return new ResponseEntity(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw  new Exception();
         }
     }
 
@@ -54,15 +55,15 @@ public class ProductServicesImpl implements ProductServices {
 
     //PUT
     @Override
-    public ResponseEntity<List<Product>> updateProduct(List<Product> products) {
+    public List<Product> updateProduct(List<Product> products)throws Exception {
 
         System.out.println("service - update product ");
         try {
             return productsRepository.updateProduct(products);
         } catch (Exception e) {
-            if(BadHttpRequest.class==e.getClass())return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            if(BadHttpRequest.class==e.getClass())throw new BadHttpRequest();
 
-            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new Exception();
         }
 
     }
@@ -79,6 +80,5 @@ public class ProductServicesImpl implements ProductServices {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 }
